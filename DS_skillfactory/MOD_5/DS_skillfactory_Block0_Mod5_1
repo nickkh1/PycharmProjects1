@@ -1,0 +1,26 @@
+# print('Hello, this is Block0 Module 5')
+
+# def first_function():
+#     print("Hello world!")
+# first_function()
+# first_function()
+
+
+
+
+
+date1 = "31012019"
+tu154 = []
+day = int(date1[:2])
+tu154.append(day)
+month = int(date1[2:4])
+tu154.append(month)
+year = int(date1[4:9])
+tu154.append(year)
+tu154tu = tuple(tu154)
+print(tu154tu)
+
+def split_date(date):
+   day, month, year = date[:2], date[2:4], date[4:]
+   return int(day), int(month), int(year)
+print(split_date("31012019"))
