@@ -1,4 +1,5 @@
 import pandas as pd
+pd.set_option('display.max_columns', None)
 
 melb_data = pd.read_csv('C:/Users/nick-/Documents/DS/projects/SF_tasks/melb_data_fe.csv', sep=',')
 
@@ -25,3 +26,20 @@ for col in melb_df.columns:
 # mask1 = melb_df['Type'] == 'townhouse'
 # mask2 = melb_df['Rooms'] > 2
 # print(int(melb_df[mask1&mask2].sort_values(by=['Rooms', 'MeanRoomsSquare'],ascending=[True, False],ignore_index=True).loc[18, 'Price']))
+
+# print(melb_df.groupby('Type',as_index=False)['Price'].mean())
+
+# print(melb_df.groupby('Regionname')['Distance'].min().sort_values(ascending=False))
+
+# print(melb_df.groupby('MonthSale')['Price'].agg(['count', 'mean', 'max']).sort_values(by='count', ascending=False))
+
+# print(melb_df.groupby('MonthSale')['Price'].agg('describe'))
+
+# print(melb_df.groupby('Regionname', as_index=True)['SellerG'].agg(['nunique', set]))
+print(melb_df.columns)
+# print(melb_df.groupby('Regionname')['Lattitude'].std().sort_values(ascending=True))
+
+date1 = pd.to_datetime('2017-05-01')
+date2 = pd.to_datetime('2017-09-01')
+mask = (date1 <= melb_df['Date']) & (melb_df['Date']<= date2)
+print(melb_df[mask].groupby('SellerG')['Price'].sum().sort_values(ascending=True))
