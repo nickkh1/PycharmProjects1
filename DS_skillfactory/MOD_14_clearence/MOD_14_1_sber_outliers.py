@@ -237,21 +237,24 @@ cols_with_null = cols_null_percent[cols_null_percent>0].sort_values(ascending=Fa
 # print(f'Результирующее число записей: {cleaned.shape[0]}')
 
 
+#### Модифицированный поиск аутлаеров
+# def outliers_iqr_mod(data, feature, log_scale=False, left=1.5, right=1.5):
+#     if log_scale:
+#         x = np.log(data[feature])
+#     else:
+#         x = data[feature]
+#     quartile_1, quartile_3 = x.quantile(0.25), x.quantile(0.75),
+#     iqr = quartile_3 - quartile_1
+#     lower_bound = quartile_1 - (iqr * left)
+#     upper_bound = quartile_3 + (iqr * right)
+#     outliers = data[(x<lower_bound) | (x > upper_bound)]
+#     cleaned = data[(x>lower_bound) & (x < upper_bound)]
+#     return outliers, cleaned
+#
+#
+# outliers, cleaned = outliers_iqr_mod(sber_data, 'price_doc', log_scale=True, left = 3, right = 3)
+# print(f'Число выбросов по методу Тьюки: {outliers.shape[0]}')
+# print(f'Результирующее число записей: {cleaned.shape[0]}')
 
-def outliers_iqr_mod(data, feature, log_scale=False, left=1.5, right=1.5):
-    if log_scale:
-        x = np.log(data[feature])
-    else:
-        x = data[feature]
-    quartile_1, quartile_3 = x.quantile(0.25), x.quantile(0.75),
-    iqr = quartile_3 - quartile_1
-    lower_bound = quartile_1 - (iqr * left)
-    upper_bound = quartile_3 + (iqr * right)
-    outliers = data[(x<lower_bound) | (x > upper_bound)]
-    cleaned = data[(x>lower_bound) & (x < upper_bound)]
-    return outliers, cleaned
 
 
-outliers, cleaned = outliers_iqr_mod(sber_data, 'price_doc', log_scale=True, left = 3, right = 3)
-print(f'Число выбросов по методу Тьюки: {outliers.shape[0]}')
-print(f'Результирующее число записей: {cleaned.shape[0]}')
