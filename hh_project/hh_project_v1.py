@@ -32,7 +32,7 @@ def get_edu(education):
 edu_type = copy_hh['Образование и ВУЗ'].apply(get_edu)
 copy_hh['Образование'] = edu_type
 # print(copy_hh['Образование'].unique())
-copy_hh.drop('Образование и ВУЗ', axis=1)
+copy_hh = copy_hh.drop(['Образование и ВУЗ'], axis=1)
 # print(copy_hh[copy_hh['Образование'] == 'среднее']['Образование'].count())
 
 # выделяем пол, возраст
@@ -51,7 +51,7 @@ sex_type_new = copy_hh['Пол, возраст'].apply(lambda x: 'М' if x.split
 age_type = copy_hh['Пол, возраст'].apply(lambda x: int(x.split(' ')[3]))
 copy_hh['Пол'] = sex_type_new
 copy_hh['Возраст'] = age_type
-copy_hh.drop('Пол, возраст', axis=1)
+copy_hh = copy_hh.drop(['Пол, возраст'], axis=1)
 
 
 # print(copy_hh[copy_hh['Пол'] == 'Ж']['Пол'])
@@ -72,7 +72,7 @@ def get_experience(exp):
     month_key_words = ['месяц', 'месяцев', 'месяца']
     year_key_words = ['год', 'лет', 'года']
     if isinstance(exp, float):
-        return None
+        return True
     else:
         args_splited = exp.split(' ')
         month = 0
@@ -95,7 +95,7 @@ def get_experience(exp):
 
 total_months = copy_hh['Опыт работы'].apply(get_experience)
 copy_hh['Опыт работы (месяц)'] = total_months
-copy_hh.drop('Опыт работы', axis=1)
+copy_hh = copy_hh.drop(['Опыт работы'], axis=1)
 
 
 # определяем город
@@ -177,5 +177,75 @@ def get_visit(move):
 
 ready_visit = copy_hh['Город, переезд, командировки'].apply(get_visit)
 copy_hh['Готовность к командировкам'] = ready_visit
-copy_hh.drop('Город, переезд, командировки', axis=1)
+copy_hh = copy_hh.drop(['Город, переезд, командировки'], axis=1)
+
+
+# print(copy_hh.info())
+# print(copy_hh['Занятость'])
+# print(copy_hh['График'])
+
+
+
+# определяем график и занятость
+
+
+work_occupancy = ['полная занятость', 'частичная занятость', 'проектная работа', 'волонтерство', 'стажировка']
+for occupancy in work_occupancy:
+    copy_hh[occupancy] = copy_hh['Занятость'].apply(lambda x: occupancy in x)
+
+
+work_schedule = ['полный день', 'сменный график', 'гибкий график', 'удаленная работа', 'вахтовый метод']
+for schedule in work_schedule:
+    copy_hh[schedule] = copy_hh['График'].apply(lambda x: schedule in x)
+copy_hh = copy_hh.drop(['Занятость'], axis=1)
+copy_hh = copy_hh.drop(['График'], axis=1)
+# print(copy_hh.info())
+
+
+# mask_fly_in_fly = copy_hh['проектная работа'] == True
+# mask_flexible = copy_hh['волонтерство'] == True
+# print(copy_hh[mask_fly_in_fly & mask_flexible].shape[0])
+#
+#
+# mask_fly_in_fly_1 = copy_hh['вахтовый метод'] == True
+# mask_flexible_1 = copy_hh['гибкий график'] == True
+# print(copy_hh[mask_fly_in_fly_1 & mask_flexible_1].shape[0])
+
+
+
+# определяем ЗП
+
+
+currency_data = pd.read_csv('C:/Users/nick-/Documents/DS/projects/SF_tasks/ExchangeRates.csv', sep=',')
+currency_data['date'] = pd.to_datetime(currency_data['date']).dt.date
+copy_hh['Обновление резюме'] = pd.to_datetime(copy_hh['Обновление резюме']).dt.date
+
+copy_hh['ЗП (temp)'] = copy_hh['ЗП'].apply(lambda x: float(x.split(' ')[0]))
+
+
+def get_currencies(arg):
+    currencies = {'грн.':'UAH','USD':'USD','EUR':'EUR','бел.руб.':'BYN','KGS':'KGS','сум':'UZS','AZN':'AZN','KZT':'KZT','руб.':'руб.'}
+    arg = arg.split(' ')
+    value = currencies[arg[1]]
+    return value
+
+
+copy_hh['Курс (temp)'] = copy_hh['ЗП'].apply(get_currencies)
+
+merged_hh = copy_hh.merge(
+    currency_data,
+    left_on=['Курс (temp)', 'Обновление резюме'],
+    right_on=['currency', 'date'],
+    how='left')
+
+merged_hh['close'] = merged_hh['close'].fillna(1)
+merged_hh['proportion'] = merged_hh['proportion'].fillna(1)
+copy_hh['ЗП (руб)'] = merged_hh['close'] * merged_hh['ЗП (temp)'] / merged_hh['proportion']
+copy_hh = copy_hh.drop(['ЗП', 'ЗП (temp)', 'Курс (temp)'], axis=1)
+print(round(copy_hh['ЗП (руб)'].median()/1000))
+
+
+# print(currency_tag.value_counts(normalize=True))
+# print(currency_data.info())
+# print(copy_hh['ЗП'].head(15))
 
