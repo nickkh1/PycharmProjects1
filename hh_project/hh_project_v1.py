@@ -159,7 +159,7 @@ def get_visit(move):
     line_splited = move.split(' , ')
     if line_splited[1].find('м.') != -1:
         if len(line_splited) < 4:
-            return None
+            return True
         else:
             if line_splited[3].find('не') != -1:
                 return False
@@ -167,7 +167,7 @@ def get_visit(move):
                 return True
     else:
         if len(line_splited) < 3:
-            return None
+            return True
         else:
             if line_splited[2].find('не') != -1:
                 return False
@@ -242,10 +242,277 @@ merged_hh['close'] = merged_hh['close'].fillna(1)
 merged_hh['proportion'] = merged_hh['proportion'].fillna(1)
 copy_hh['ЗП (руб)'] = merged_hh['close'] * merged_hh['ЗП (temp)'] / merged_hh['proportion']
 copy_hh = copy_hh.drop(['ЗП', 'ЗП (temp)', 'Курс (temp)'], axis=1)
-print(round(copy_hh['ЗП (руб)'].median()/1000))
+# print(round(copy_hh['ЗП (руб)'].median()/1000))
 
 
 # print(currency_tag.value_counts(normalize=True))
 # print(currency_data.info())
 # print(copy_hh['ЗП'].head(15))
 
+
+
+
+# визуализация
+
+# fig, axes = plt.subplots(nrows=2, ncols=1, figsize=(10, 8))
+# sns.histplot(
+#     data=copy_hh,
+#     x='Возраст',
+#     bins=20,
+#     kde=True,
+#     ax=axes[0]
+# );
+# axes[0].set_title('Возраст сосискателей', fontsize=16)
+# sns.boxplot(
+#     data=copy_hh,
+#     x='Возраст',
+#     orient='h',
+#     width=0.9,
+#     ax=axes[1]
+# );
+# axes[1].set_title('Распределение возраста');
+# axes[1].grid()
+# # plt.show()
+
+# print(copy_hh['Возраст'].describe())
+# print(copy_hh['Возраст'].mode())
+
+# fig.show()
+# fig_1 = px.box(
+#     data_frame=copy_hh,
+#     x='Возраст',
+#     orientation='h',
+#     title='Распределение возраста'
+# )
+# fig_1.show()
+
+
+
+# fig, axes = plt.subplots(nrows=2, ncols=1, figsize=(10, 8))
+# sns.histplot(
+#     data=copy_hh,
+#     x='Опыт работы (месяц)',
+#     bins=20,
+#     kde=True,
+#     ax=axes[0]
+# );
+# axes[0].set_title('Опыт сосискателей', fontsize=16)
+# sns.boxplot(
+#     data=copy_hh,
+#     x='Опыт работы (месяц)',
+#     orient='h',
+#     width=0.9,
+#     ax=axes[1]
+# );
+# axes[1].set_title('Распределение опыта');
+# axes[1].grid()
+# # plt.show()
+
+# print(copy_hh['Опыт работы (месяц)'].describe())
+# print(copy_hh['Опыт работы (месяц)'].mode())
+#
+#
+# fig_1 = px.box(
+#     data_frame=copy_hh,
+#     x='Опыт работы (месяц)',
+#     orientation='h',
+#     title='Распределение опыта'
+# )
+# fig_1.show()
+
+
+
+
+# fig, axes = plt.subplots(nrows=2, ncols=1, figsize=(10, 8))
+# sns.histplot(
+#     data=copy_hh,
+#     x='ЗП (руб)',
+#     bins=20,
+#     kde=True,
+#     ax=axes[0]
+# );
+# axes[0].set_title('ЗП сосискателей', fontsize=16)
+# sns.boxplot(
+#     data=copy_hh,
+#     x='ЗП (руб)',
+#     orient='h',
+#     width=0.9,
+#     ax=axes[1]
+# );
+# axes[1].set_title('Распределение ЗП');
+# axes[1].grid()
+# plt.show()
+
+# print(copy_hh['ЗП (руб)'].describe())
+# print(copy_hh['ЗП (руб)'].mode())
+#
+#
+# fig_1 = px.box(
+#     data_frame=copy_hh,
+#     x='ЗП (руб)',
+#     orientation='h',
+#     title='Распределение ЗП'
+# )
+# fig_1.show()
+
+
+
+
+
+
+# # Зп и образование
+# fig = plt.figure(figsize=(10, 7))
+# boxplot = sns.boxplot(
+#     data=copy_hh[copy_hh['ЗП (руб)']<1000000],
+#     y='Образование',
+#     x='ЗП (руб)',
+#     orient='h',
+#     width=0.9
+# )
+# boxplot.set_title('Распределение ЗП по уровню образования');
+# boxplot.set_xlabel('ЗП');
+# boxplot.set_ylabel('Уровень образования');
+# boxplot.grid()
+# plt.show()
+#
+#
+# bar_data = copy_hh[copy_hh['ЗП (руб)']<1000000].groupby(
+#     by='Образование',
+#     as_index=False
+# )[['ЗП (руб)']].median().round(2)
+# print(bar_data)
+#
+# fig = px.bar(
+#     data_frame=bar_data, #датафрейм
+#     x="Образование", #ось x
+#     y="ЗП (руб)", #ось y
+#     color='Образование', #расцветка в зависимости от страны
+#     orientation='v', #ориентация графика
+#     height=500, #высота
+#     width=1000, #ширина
+#     title='Медианная ЗП в зависимости от уровня образования' #заголовок
+# )
+# fig.show()
+
+
+
+# ЗП и город
+# fig = plt.figure(figsize=(10, 7))
+# boxplot = sns.boxplot(
+#     data=copy_hh[copy_hh['ЗП (руб)']<1000000],
+#     y='Город',
+#     x='ЗП (руб)',
+#     orient='h',
+#     width=0.9
+# )
+# boxplot.set_title('Распределение ЗП по городам');
+# boxplot.set_xlabel('ЗП');
+# boxplot.set_ylabel('город');
+# boxplot.grid()
+# plt.show()
+#
+#
+# bar_data = copy_hh[copy_hh['ЗП (руб)']<1000000].groupby(
+#     by='Город',
+#     as_index=False
+# )[['ЗП (руб)']].median().round(2)
+# print(bar_data)
+#
+# fig = px.bar(
+#     data_frame=bar_data, #датафрейм
+#     x="Город", #ось x
+#     y="ЗП (руб)", #ось y
+#     color='Город', #расцветка в зависимости от страны
+#     orientation='v', #ориентация графика
+#     height=500, #высота
+#     width=1000, #ширина
+#     title='Медианная ЗП в зависимости от города' #заголовок
+# )
+# fig.show()
+
+
+
+# # ЗП от переезда и командировок
+# from numpy import median
+# fig = plt.figure(figsize=(10, 7))
+# barplot = sns.barplot(
+#     data=copy_hh[copy_hh['ЗП (руб)']<1000000],
+#     estimator=median,
+#     x='Готовность к переезду',
+#     y='ЗП (руб)',
+#     hue='Готовность к командировкам'
+# );
+# barplot.set_title('Зависимость ЗП от готовности к переезду и коммандировкам');
+# plt.show()
+
+
+
+# ЗП от образования и возраста - тепловая карта
+# pivot = copy_hh.pivot_table(
+#     values='ЗП (руб)',
+#     columns='Возраст',
+#     index='Образование',
+# )
+# pivot.columns = pivot.columns.astype('string')
+# print(pivot)
+#
+# heatmap = sns.heatmap(data=pivot, cmap='YlGnBu')
+# heatmap.set_title('Тепловая карта ЗП по возрасту и образованию', fontsize=16);
+# plt.show()
+
+
+# точечная диграмма Опыт работы (месяц)») от возраста
+
+
+# fig = plt.figure(figsize=(10, 5))
+# scatter_data = copy_hh.copy()
+# scatter_data['Опыт работы (год)'] = scatter_data['Опыт работы (месяц)']/12
+# sns.lineplot(x=[0, 100], y=[0, 100])
+# ax = sns.scatterplot(
+#     data=scatter_data,
+#     x='Возраст',
+#     y='Опыт работы (год)',
+# )
+# ax.set_title('Зависимость опыта работы от возраста');
+# plt.show()
+
+#
+
+
+
+# тупой график
+
+
+
+
+# from numpy import median
+# fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(10, 8))
+# sns.barplot(
+#     data=copy_hh[copy_hh['ЗП (руб)']<1000000],
+#     estimator=median,
+#     x='полная занятость',
+#     y='ЗП (руб)',
+#     ax=axes[0,0]
+# );
+# sns.barplot(
+#     data=copy_hh[copy_hh['ЗП (руб)']<1000000],
+#     estimator=median,
+#     x='частичная занятость',
+#     y='ЗП (руб)',
+#     ax=axes[0,1]
+# );
+# sns.barplot(
+#     data=copy_hh[copy_hh['ЗП (руб)']<1000000],
+#     estimator=median,
+#     x='проектная работа',
+#     y='ЗП (руб)',
+#     ax=axes[1,0]
+# );
+# sns.barplot(
+#     data=copy_hh[copy_hh['ЗП (руб)']<1000000],
+#     estimator=median,
+#     x='волонтерство',
+#     y='ЗП (руб)',
+#     ax=axes[1,1]
+# );
+# plt.show()
