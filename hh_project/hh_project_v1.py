@@ -72,7 +72,7 @@ def get_experience(exp):
     month_key_words = ['месяц', 'месяцев', 'месяца']
     year_key_words = ['год', 'лет', 'года']
     if isinstance(exp, float):
-        return True
+        return None
     else:
         args_splited = exp.split(' ')
         month = 0
@@ -516,3 +516,41 @@ copy_hh = copy_hh.drop(['ЗП', 'ЗП (temp)', 'Курс (temp)'], axis=1)
 #     ax=axes[1,1]
 # );
 # plt.show()
+
+
+
+#
+#
+#
+#
+#
+#
+#
+#
+# Очистка данных
+
+dupl_columns = list(copy_hh.columns)
+
+# mask = copy_hh.duplicated()
+# hh_duplicates = copy_hh[mask]
+# удаляем дупликаты
+hh_dedupped = copy_hh.drop_duplicates(subset=dupl_columns)
+
+
+# print(hh_dedupped.isna().sum().sort_values(ascending=False))
+
+fill_hh = hh_dedupped.copy()
+values = {
+    'Опыт работы (месяц)': fill_hh['Опыт работы (месяц)'].median()}
+fill_hh = fill_hh.fillna(values)
+
+drop_hh = fill_hh.copy()
+drop_hh = drop_hh.dropna(how='any', axis=0)
+# print(drop_hh.isna().sum().sort_values(ascending=False))
+# print(drop_hh['Опыт работы (месяц)'].mean())
+
+
+list_index = drop_hh[drop_hh['ЗП (руб)']<1000 | drop_hh['ЗП (руб)']<1000]
+print(list_index)
+
+
