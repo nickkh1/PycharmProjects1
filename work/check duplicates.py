@@ -58,6 +58,7 @@ full_dupl = new_owner_na_drop[mask1]
 leads_dedupped = full_dupl.drop_duplicates(subset=['l.Id', 'l.Lead Owner Name', 'c.Call Owner Name'])
 
 '''считаем от кого ушли лиды и к кому пришли'''
+# print(leads_dedupped.iloc[4])
 print(leads_dedupped.groupby('c.Call Owner Name')['l.Id'].agg('nunique').sort_values(ascending=False))
 print(leads_dedupped.groupby('l.Lead Owner Name')['l.Id'].agg('nunique').sort_values(ascending=False))
 
