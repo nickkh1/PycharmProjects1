@@ -10,11 +10,14 @@ import pandas as pd # Импорт библиотеки pandas — при вып
 # data=pd.read_csv('C:/Users/nick-/Documents/DS/projects/SF_tasks/ErrorEnCoding.csv', header=None)
 # print(data)
 
-from chardet.universaldetector import UniversalDetector # Импортируем субмодуль chardet.universaldetector
-detector = UniversalDetector()
-with open('C:/Users/nick-/Documents/DS/projects/SF_tasks/ErrorEnCoding.csv', 'rb') as fh:
-    for line in fh:
-        detector.feed(line)
-        if detector.done:
-            break
-detector.close()
+# from chardet.universaldetector import UniversalDetector # Импортируем субмодуль chardet.universaldetector
+# detector = UniversalDetector()
+# with open('C:/Users/nick-/Documents/DS/projects/SF_tasks/ErrorEnCoding.csv', 'rb') as fh:
+#     for line in fh:
+#         detector.feed(line)
+#         if detector.done:
+#             break
+# detector.close()
+
+
+
