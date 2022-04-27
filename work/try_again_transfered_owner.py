@@ -4,7 +4,7 @@ import xlsxwriter
 
 pd.set_option('display.max_columns', None)
 
-sales_trans_leads = pd.read_csv('C:/Users/nick-/Desktop/CI/4.Analytics section/Sales/raw_data_for_Py/2022.03.01_lead_with_activity_owners_feb.csv', sep=',')
+sales_trans_leads = pd.read_csv('C:/Users/nick-/Desktop/CI/4.Analytics section/Sales/raw_data_for_Py/2022_04_13_lead_with_activity_owners.csv', sep=',')
 # print(sales_trans_leads.columns)
 
 sales_trans_leads['l.Created Time'] = pd.to_datetime(sales_trans_leads['l.Created Time'])

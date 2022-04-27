@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import statistics
 
+
 pd.set_option('display.max_columns', None)
 
 df = pd.read_csv('C:/Users/nick-/Documents/DS/projects/SF_tasks/wine_cleared.csv', sep=',')
@@ -36,4 +37,10 @@ df = pd.read_csv('C:/Users/nick-/Documents/DS/projects/SF_tasks/wine_cleared.csv
 # plt.show() # просмотр графика
 
 
-print(df.corr(method='kendall'))
+# print(df.corr(method='kendall'))
+
+from sklearn.metrics import matthews_corrcoef
+x = [+1, -1, +1, +1] # список значений признака х
+y = [+1, +1, +1, -1] # список значений признака y
+
+print(matthews_corrcoef(x, y))
