@@ -102,6 +102,9 @@ plt.show()
 fig = plt.figure(figsize=(12, 6))
 # добавляем систему координат
 ax = fig.add_axes([0.1, 0.2, 0.8, 0.7])
+# добавляем кол-во лидов
+# ax.barplot('Created Time', 'leads_num', data=leads_j_d_final_final, hue='Course_name')
+# ax2 = ax.twinx()
 # строим lineplot для кумулятивной конверсии во времени в каждой группе
 sns.lineplot(x='Created Time', y='cum_conversion_CR2', data=leads_j_d_final_final, hue='Course_name', ax=ax)
 # задаём подпись к графику
