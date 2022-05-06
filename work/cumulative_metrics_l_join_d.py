@@ -4,7 +4,7 @@ import seaborn as sns
 
 pd.set_option('display.max_columns', None)
 
-leads_j_d = pd.read_csv('C:/Users/nick-/Desktop/CI/4.Analytics section/for_Python/leads_join_deals_from_01_01_2022.csv', sep=',')
+leads_j_d = pd.read_csv('C:/Users/nick-/Desktop/CI/4.Analytics section/for_Python/leads_join_deals_01_12_21_to_05_05_22.csv', sep=',')
 
 leads_j_d_new = leads_j_d.drop(['Company', 'Email', 'Last Name', 'Mobile', 'Website', 'Industry', 'Lead Source', 'Lead Status',
                                 'Converted Time', 'Converted Contact', 'Converted Account', 'Full Name', 'Phone', 'Created By',
