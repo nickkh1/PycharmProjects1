@@ -4,7 +4,8 @@ import seaborn as sns
 
 pd.set_option('display.max_columns', None)
 
-leads_j_d = pd.read_csv('C:/Users/nick-/Desktop/CI/4.Analytics section/for_Python/leads_join_deals_01_12_21_to_05_05_22.csv', sep=',')
+leads_j_d = pd.read_csv('C:/Users/nick-/Desktop/CI/4.Analytics section/for_Python/leads_join_deals_01_09_21_to_10_05_22.csv', sep=',')
+#leads_join_deals_01_12_21_to_10_05_22
 
 leads_j_d_new = leads_j_d.drop(['Company', 'Email', 'Last Name', 'Mobile', 'Website', 'Industry', 'Lead Source', 'Lead Status',
                                 'Converted Time', 'Converted Contact', 'Converted Account', 'Full Name', 'Phone', 'Created By',
@@ -45,7 +46,7 @@ leads_j_d_new['was_paid'] = leads_j_d_new['d.Stage'].apply(lambda x: 1 if x in l
 # print(leads_j_d_new[leads_j_d_new['Created Time'] == '2022-01-02'])
 
 '''убираем остатки ненужных столбцов для цели расчета кумулятивной конверсии'''
-leads_j_d_final = leads_j_d_new.drop(['Lead Owner Name', 'Lead Owner', 'd.Stage',], axis=1)
+leads_j_d_final = leads_j_d_new.drop(['Lead Owner Name', 'Lead Owner', 'd.Stage'], axis=1)
 
 # print(leads_j_d_final.info())
 # print(leads_j_d_final.head())
