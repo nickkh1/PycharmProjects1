@@ -1,10 +1,12 @@
+import datetime
+
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
 pd.set_option('display.max_columns', None)
 
-leads_j_d = pd.read_csv('C:/Users/nick-/Desktop/CI/4.Analytics section/for_Python/leads_join_deals_01_09_21_to_10_05_22.csv', sep=',')
+leads_j_d = pd.read_csv('C:/Users/nick-/Desktop/CI/4.Analytics section/for_Python/Metrics_cumulative/leads_join_deals_01_11_21_to_17_05_22.csv', sep=',')
 #leads_join_deals_01_12_21_to_10_05_22
 
 leads_j_d_new = leads_j_d.drop(['Company', 'Email', 'Last Name', 'Mobile', 'Website', 'Industry', 'Lead Source', 'Lead Status',
@@ -80,6 +82,10 @@ leads_j_d_final_final['cum_conversion_CR2'] = leads_j_d_final_final['cum_convert
 
 # print(leads_j_d_final_final.head())
 
+
+start_date = datetime.datetime(2021,12,1)
+# end_date = datetime.datetime(2022,5,16)
+
 '''строим график кумулятивной конверсии CRD'''
 # создаём фигуру размером 8x4
 fig = plt.figure(figsize=(12, 6))
@@ -94,7 +100,8 @@ ax.xaxis.set_tick_params(rotation = 45)
 # задаём отображение сетки
 ax.grid(True)
 # задаем высоту оси y
-ax.set(ylim=(20, 60))
+ax.set(ylim=(20, 50))
+ax.set(xlim=(start_date, datetime.datetime.now()))
 plt.show()
 
 
@@ -115,6 +122,7 @@ ax.xaxis.set_tick_params(rotation = 45)
 # задаём отображение сетки
 ax.grid(True)
 # задаем высоту оси y
-ax.set(ylim=(0, 4))
+ax.set(ylim=(0, 3))
+ax.set(xlim=(start_date, datetime.datetime.now()))
 plt.show()
 
