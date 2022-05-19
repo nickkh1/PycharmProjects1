@@ -6,7 +6,7 @@ import seaborn as sns
 
 pd.set_option('display.max_columns', None)
 
-leads_j_d = pd.read_csv('C:/Users/nick-/Desktop/CI/4.Analytics section/for_Python/Metrics_cumulative/leads_join_deals_01_11_21_to_17_05_22.csv', sep=',')
+leads_j_d = pd.read_csv('C:/Users/nick-/Desktop/CI/4.Analytics section/for_Python/Metrics_cumulative/leads_join_deals_01_12_21_to_17_05_22.csv', sep=',')
 #leads_join_deals_01_12_21_to_10_05_22
 
 leads_j_d_new = leads_j_d.drop(['Company', 'Email', 'Last Name', 'Mobile', 'Website', 'Industry', 'Lead Source', 'Lead Status',
@@ -122,7 +122,7 @@ ax.xaxis.set_tick_params(rotation = 45)
 # задаём отображение сетки
 ax.grid(True)
 # задаем высоту оси y
-ax.set(ylim=(0, 3))
+ax.set(ylim=(0, 3.5))
 ax.set(xlim=(start_date, datetime.datetime.now()))
 plt.show()
 
