@@ -29,14 +29,14 @@ deals_reformat = deals_initial[['Id', 'Deal Owner Name', 'Created Time', 'Stage'
 # print(deals_reformat['Work experience'].value_counts())
 # print(deals_reformat['Stage'].value_counts())
 
-list_was_success = ['Downpayment made (upfront)', 'Downpayment made', 'Internal EMI in progress', 'Refunded / Churned', 'Closed Won']
+list_was_success = ['Downpayment made (upfront)', 'Downpayment made', 'Internal EMI in progress', 'Closed Won']
 deals_reformat['success'] = deals_reformat['Stage'].apply(lambda x: 1 if x in list_was_success else 0)
 
 goal_for_study = deals_reformat.groupby(by=['Goal for study'], as_index=False)['success'].agg(['sum', 'count']).reset_index()
 goal_for_study['proportion'] = round(goal_for_study['sum'] / goal_for_study['count']*100,1)
 goal_for_study = goal_for_study.loc[goal_for_study['sum']>5].sort_values(by='proportion', ascending=False)
 print(goal_for_study)
-
+# если добавить тех, кто сделал рефанд в list_was_sucess - результаты распределены примерно так же, только выше пропорции
 
 '''строим график'''
 sns.set(style="darkgrid")
@@ -45,13 +45,15 @@ sns.set(style="darkgrid")
 plt.figure(figsize=(12, 7))
 
 # plot a bar chart
-sns.barplot(
+ax = sns.barplot(
     x="proportion",
     y='Goal for study',
     data=goal_for_study,
     estimator=sum,
     ci=None,
-    color='#69b3a2');
+    color='#69b3a2')
+
+ax.set_title('"Goal for study" conversion to success, %', size=20)
 
 plt.show()
 
