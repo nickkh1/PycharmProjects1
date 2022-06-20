@@ -5,12 +5,13 @@ pd.set_option('display.max_columns', None)
 
 
 #подгружаем информацию из airtable
-leads_df = pd.read_csv('C:/Users/nick-/Desktop/CI/4.Analytics section/for_Python/Lead_num_date/Leads_17_05_22.csv', sep=',')
-ledger = pd.read_excel('C:/Users/nick-/Desktop/CI/4.Analytics section/for_Python/Lead_num_date/revenue_ledger_17_05_22.xlsx')
+leads_df = pd.read_csv('C:/Users/nick-/Desktop/CI/4.Analytics section/for_Python/Lead_num_date/Leads_20_06_2022.csv', sep=',')
+ledger = pd.read_excel('C:/Users/nick-/Desktop/CI/4.Analytics section/for_Python/Lead_num_date/Revenue_ledger_20_06_2022.xlsx')
 
 
 
 new_leads_df = leads_df[['Email', 'Id', 'Created Time']]
+new_leads_df['Id'] = new_leads_df['Id'].astype('str')
 new_leads_df = new_leads_df.dropna(subset=['Email'])
 ledger_leads = pd.merge(ledger, new_leads_df, on='Email', how='left')
 
@@ -24,5 +25,5 @@ ledger_leads['Id'] = ledger_leads['Id'].astype('object')
 # ledger_leads = ledger_leads.fillna(0)
 # print(ledger_leads.head())
 
-ledger_leads.to_csv('C:/Users/nick-/Desktop/CI/4.Analytics section/for_Python/Lead_num_date/ledger_leads_17_05_22.csv', sep=',')
+ledger_leads.to_csv('C:/Users/nick-/Desktop/CI/4.Analytics section/for_Python/Lead_num_date/ledger_leads_20_06_22.csv', sep=',')
 
