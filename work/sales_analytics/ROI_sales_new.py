@@ -5,7 +5,7 @@ import pandas as pd
 pd.set_option('display.max_columns', None)
 
 # подгружаем лэджер
-ledger = pd.read_excel('C:/Users/nick-/Desktop/CI/4.Analytics section/for_Python/ROI_Sales_managers/Revenue_ledger_20_06_22.xlsx')
+ledger = pd.read_excel('C:/Users/nick-/Desktop/CI/4.Analytics section/for_Python/ROI_Sales_managers/Revenue_ledger_20_06_2022.xlsx')
 # подгружаем отчет leads_join_deals
 ljd = pd.read_csv('C:/Users/nick-/Desktop/CI/4.Analytics section/for_Python/ROI_Sales_managers/leads_join_deals_01_04to_01_06_22.csv', sep=',')
 # подгружаем список соотношения имен в разных базах
@@ -14,10 +14,10 @@ name_dict = pd.read_excel('C:/Users/nick-/Desktop/CI/4.Analytics section/for_Pyt
 
 '''выбор месяца'''
 month = 5
-
+year = 2022
 
 '''обрабатываем ledger и создаем список продаж'''
-ledger_new = ledger[['Email', 'Owner', 'lead creation date', 'lead creaction month', 'Course type', 'Student status',
+ledger_new = ledger[['Email', 'Owner', 'lead creation date', 'lead creation year', 'lead creaction month', 'Course type', 'Student status',
                      'Refund (if applicable)', 'Payment type', 'Full payment', 'lead_Id']].copy()
 ledger_new['lead_Id'] = ledger_new['lead_Id'].astype('object')
 # print(ledger_new.info())
@@ -27,21 +27,24 @@ ledger_new['Full payment'] = pd.to_numeric(ledger_new['Full payment'], errors='c
 ledger_new['Paid'] = ledger_new['Email'].apply(lambda x: 1)
 
 ledger_new = ledger_new.drop(columns=['Email', 'lead creation date', 'Student status'], axis=1)
-ledger_new_req_month = ledger_new[ledger_new['lead creaction month'] == month]
+
+ledger_new_req_month = ledger_new[(ledger_new['lead creation year'] == year) & (ledger_new['lead creaction month'] == month)]
 
 sales_info = ledger_new_req_month.groupby(by=['Owner'], as_index=False)[['Paid', 'Full payment', 'Discontinued']].sum().sort_values(by='Paid', ascending=False)
-# print(sales_info)
+# print(ledger.info())
 
 
 ''' обрабатываем лиды и создаем список '''
-ljd_new = ljd[['Id', 'Lead Owner Name', 'd.Stage', 'Created Time', 'Is Converted?', 'd.Deal Owner Name']].copy()
+ljd_new = ljd[['Id', 'd.Id', 'Lead Owner Name', 'd.Stage', 'Created Time', 'Is Converted?', 'd.Deal Owner Name']].copy()
 ljd_new['Id'] = ljd_new['Id'].astype('object')
 ljd_new = ljd_new.dropna(subset=['d.Deal Owner Name'])
 # print(ljd_new.info())
 ljd_new['month'] = pd.to_datetime(ljd_new['Created Time']).dt.month
 ljd_new_req_month = ljd_new[ljd_new['month'] == month]
+# сверим кол-во сделок
+# deals_info = ljd_new_req_month.groupby(by=['d.Deal Owner Name'], as_index=False)['d.Id'].count().sort_values(by='d.Id', ascending=False)
 leads_info = ljd_new_req_month.groupby(by=['d.Deal Owner Name'], as_index=False)['Id'].count().sort_values(by='Id', ascending=False)
-# print(leads_info)
+# print(deals_info)
 
 
 '''собираем все данные вместе'''
@@ -55,7 +58,7 @@ df_final['cr_D2S'] = df_final['Paid'] / df_final['Id']*100
 df_final['cr_D2FS'] = df_final['Full payment'] / df_final['Id']*100
 df_final['cr_S2FS'] = df_final['Full payment'] / df_final['Paid']*100
 df_final['cr_s2Churn'] = df_final['Discontinued'] / df_final['Paid']*100
-print(df_final)
+# print(df_final)
 
 
 ''' делаем визуализацию'''
@@ -76,3 +79,7 @@ ax[1].barh(width=df_final_vis['cr_D2S'], y=df_final_vis['d.Deal Owner Name'])
 ax[0].set_title('Кол-во лидов')
 ax[1].set_title('Конверсия из сделки в продажу, %')
 plt.show()
+
+
+'''записываем excel'''
+df_final.to_excel('C:/Users/nick-/Desktop/CI/4.Analytics section/for_Python/ROI_Sales_managers/dataset_22_06_22.xlsx', index= False)
