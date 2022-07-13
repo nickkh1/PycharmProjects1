@@ -5,15 +5,15 @@ import pandas as pd
 pd.set_option('display.max_columns', None)
 
 # подгружаем лэджер
-ledger = pd.read_excel('C:/Users/nick-/Desktop/CI/4.Analytics section/for_Python/ROI_Sales_managers/Revenue_ledger_20_06_2022.xlsx')
+ledger = pd.read_excel('C:/Users/nick-/Desktop/CI/4.Analytics section/for_Python/ROI_Sales_managers/Revenue_ledger_12_07_22.xlsx')
 # подгружаем отчет leads_join_deals
-ljd = pd.read_csv('C:/Users/nick-/Desktop/CI/4.Analytics section/for_Python/ROI_Sales_managers/leads_join_deals_01_04to_01_06_22.csv', sep=',')
+ljd = pd.read_csv('C:/Users/nick-/Desktop/CI/4.Analytics section/for_Python/ROI_Sales_managers/leads_join_deals_01_03_01_05_2022.csv', sep=',')
 # подгружаем список соотношения имен в разных базах
 name_dict = pd.read_excel('C:/Users/nick-/Desktop/CI/4.Analytics section/for_Python/ROI_Sales_managers/names_dict.xlsx')
 
 
 '''выбор месяца'''
-month = 5
+month = 4
 year = 2022
 
 '''обрабатываем ledger и создаем список продаж'''
@@ -64,7 +64,10 @@ df_final['cr_s2Churn'] = df_final['Discontinued'] / df_final['Paid']*100
 ''' делаем визуализацию'''
 df_final_vis = df_final.dropna(subset=['Paid']).sort_values(by='Id', ascending=False)
 df_final_vis = df_final_vis[df_final_vis['Position'] == 'SC']
-print(df_final_vis)
+df_final_vis = df_final_vis[df_final_vis['Id'] >= 50]
+
+
+print(df_final)
 
 fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(14, 8),
                        gridspec_kw={
@@ -76,10 +79,10 @@ ax[0].barh(width=df_final_vis['Id'], y=df_final_vis['d.Deal Owner Name'])
 ax[1].barh(width=df_final_vis['cr_D2S'], y=df_final_vis['d.Deal Owner Name'])
 
 
-ax[0].set_title('Кол-во лидов')
+ax[0].set_title('Кол-во сделок')
 ax[1].set_title('Конверсия из сделки в продажу, %')
 plt.show()
 
 
 '''записываем excel'''
-df_final.to_excel('C:/Users/nick-/Desktop/CI/4.Analytics section/for_Python/ROI_Sales_managers/dataset_22_06_22.xlsx', index= False)
+df_final.to_excel('C:/Users/nick-/Desktop/CI/4.Analytics section/for_Python/ROI_Sales_managers/dataset_12_07_22_mar.xlsx', index= False)
