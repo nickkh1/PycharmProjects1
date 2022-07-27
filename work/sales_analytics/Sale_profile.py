@@ -4,14 +4,16 @@ import pandas as pd
 import seaborn as sns
 pd.set_option('display.max_columns', None)
 
-deals_initial = pd.read_csv('C:/Users/nick-/Desktop/CI/4.Analytics section/for_Python/Student_analytics/Deals_17_15_22.csv', sep=',')
+deals_initial = pd.read_csv('C:/Users/nick-/Desktop/CI/4.Analytics section/for_Python/Student_analytics/Deals_21_07_22.csv', sep=',')
+print(deals_initial.info())
+
 deals_reformat = deals_initial[['Id', 'Deal Owner Name', 'Created Time', 'Stage', 'Lead Source', 'Category',
                                 'Current salary', 'Education', 'Employment status', 'Goal for study', 'Lead quality',
-                                'Online education experience', 'Work experience']].\
-                                dropna(subset=['Goal for study'])
+                                'Online education experience', 'Work experience', 'English level', 'Gender',
+                                'Laptop', 'Profession_']].\
+                                dropna(subset=['English level'])
 
-# print(deals_reformat.head())
-
+# print(deals_reformat.info())
 
 # dict = {}
 # for i in list(deals_reformat.columns):
@@ -24,6 +26,32 @@ deals_reformat = deals_initial[['Id', 'Deal Owner Name', 'Created Time', 'Stage'
 list_was_success = ['Downpayment made (upfront)', 'Downpayment made', 'Internal EMI in progress', 'Closed Won']
 deals_reformat['success'] = deals_reformat['Stage'].apply(lambda x: 1 if x in list_was_success else 0)
 
+
+# print(deals_reformat['English level'].value_counts())
+# ''' обрабатываем Current salary'''
+# # salary_category_dict = {'0': 'low', '2': 'low', '3-4': 'low', '5-6': 'high', '7-8': 'high', '8+': 'high'}
+# # deals_reformat_upd1 = deals_reformat.replace({"Current salary": salary_category_dict})
+# english_lvl = deals_reformat.groupby(by=['English level'], as_index=False)['success'].agg(['sum', 'count']).reset_index()
+# english_lvl['proportion'] = round(english_lvl['sum'] / english_lvl['count']*100,1)
+# english_lvl = english_lvl.sort_values(by='sum', ascending=False)
+#
+#
+# plt.figure(figsize=(12, 7))
+
+# english_lvl_plt = english_lvl.loc[english_lvl["Current salary"] != 'Dont know'].sort_values(by='proportion', ascending=False)
+
+# # plot a bar chart
+# ax = sns.barplot(
+#     x="proportion",
+#     y='English level',
+#     data=english_lvl,
+#     estimator=sum,
+#     ci=None,
+#     color='#69b3a2')
+#
+# ax.set_title('"English level" conversion to success, %', size=20)
+#
+# plt.show()
 
 '''обрабатываем goal_for_study'''
 goal_for_study = deals_reformat.groupby(by=['Goal for study'], as_index=False)['success'].agg(['sum', 'count']).reset_index()
@@ -90,7 +118,9 @@ ax.set_title('"Lead Quality" conversion to success, %', size=20)
 
 
 ''' обрабатываем Current salary'''
-salary_category_dict = {'0': 'low', '2': 'low', '3-4': 'low', '5-6': 'high', '7-8': 'high', '8+': 'high'}
+print(deals_reformat["Current salary"].value_counts())
+salary_category_dict = {'No salary': '0-3', '0': '0-3', '0-3': '0-3', '3-4': '3-5', '3-5': '3-5', '5-7': '5+', '7-8': '5+',
+                        '9-10': '5+', '10+': '5+'}
 deals_reformat_upd1 = deals_reformat.replace({"Current salary": salary_category_dict})
 cur_salary = deals_reformat_upd1.groupby(by=['Current salary'], as_index=False)['success'].agg(['sum', 'count']).reset_index()
 cur_salary['proportion'] = round(cur_salary['sum'] / cur_salary['count']*100,1)
@@ -116,7 +146,7 @@ ax.set_title('"Current salary" conversion to success, %', size=20)
 
 
 ''' обрабатываем Work Experience'''
-work_exp_dict = {'No experience': 'no', '1': 'low', '2-3': 'low', '4-5': 'high', '6-7': 'high', '8+': 'high'}
+work_exp_dict = {'No experience': 'no', '0-3': 'low', '2-3': 'low', '3+': 'high'}
 deals_reformat_upd1 = deals_reformat.replace({"Work experience": work_exp_dict})
 work_exp = deals_reformat_upd1.groupby(by=['Work experience'], as_index=False)['success'].agg(['sum', 'count']).reset_index()
 work_exp['proportion'] = round(work_exp['sum'] / work_exp['count']*100,1)
@@ -161,7 +191,7 @@ ax = sns.barplot(
 ax.set_title('"Education" conversion to success, %', size=20)
 
 
-''' обрабатываем Education'''
+''' обрабатываем Employment status'''
 employment_status = deals_reformat.groupby(by=['Employment status'], as_index=False)['success'].agg(['sum', 'count']).reset_index()
 employment_status['proportion'] = round(employment_status['sum'] / employment_status['count']*100,1)
 employment_status = employment_status.sort_values(by='sum', ascending=False)
@@ -209,28 +239,28 @@ ax.set_title('"Online education experience" conversion to success, %', size=20)
 
 
 
-''' обрабатываем Category'''
-category = deals_reformat.groupby(by=['Category'], as_index=False)['success'].agg(['sum', 'count']).reset_index()
-category['proportion'] = round(category['sum'] / category['count']*100,1)
-category = category.sort_values(by='sum', ascending=False)
+''' обрабатываем Profession_'''
+profession = deals_reformat.groupby(by=['Profession_'], as_index=False)['success'].agg(['sum', 'count']).reset_index()
+profession['proportion'] = round(profession['sum'] / profession['count']*100,1)
+profession = profession.sort_values(by='sum', ascending=False)
 # print(category)
 
 
 plt.figure(figsize=(12, 7))
 
-category_plt = category.loc[category['sum']>5].sort_values(by='proportion', ascending=False)
+# category_plt = category.loc[category['sum']>5].sort_values(by='proportion', ascending=False)
 
 # plot a bar chart
 ax = sns.barplot(
     x="proportion",
-    y='Category',
-    data=category_plt,
+    y='Profession_',
+    data=profession,
     estimator=sum,
     ci=None,
     color='#69b3a2')
 
-ax.set_title('"Category" conversion to success, %', size=20)
-# plt.show()
+ax.set_title('"Profession" conversion to success, %', size=20)
+plt.show()
 
 
 '''строим общий рисунок'''

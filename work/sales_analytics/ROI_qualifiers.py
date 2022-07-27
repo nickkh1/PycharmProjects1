@@ -3,10 +3,10 @@ import pandas as pd
 pd.set_option('display.max_columns', None)
 
 # подгружаем данные
-df = ljd = pd.read_csv('C:/Users/nick-/Desktop/CI/4.Analytics section/for_Python/ROI_Qualifiers/CI_Initial_owner_Converted_13_07_22.csv', sep=',')
+df = ljd = pd.read_csv('C:/Users/nick-/Desktop/CI/4.Analytics section/for_Python/ROI_Qualifiers/CI_Initial_owner_Converted_27_07_22.csv', sep=',')
 
 '''выбор месяца'''
-month = 6
+month = 7
 year = 2022
 
 '''обрабатываем данные'''
@@ -43,3 +43,5 @@ ax[1].barh(width=df_final_vis['CRD'], y=df_final_vis['u.Full Name'])
 ax[0].set_title('Кол-во лидов')
 ax[1].set_title('Конверсия из лида в сделку, %')
 plt.show()
+
+df_final.to_excel('C:/Users/nick-/Desktop/CI/4.Analytics section/for_Python/ROI_Qualifiers/CI_Initial_owner_Converted_27_07_22.xlsx', index= False)

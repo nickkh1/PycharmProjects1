@@ -6,8 +6,8 @@ pd.set_option('display.max_columns', None)
 
 #подгружаем информацию из airtable
 # leads_df = pd.read_csv('C:/Users/nick-/Desktop/CI/4.Analytics section/for_Python/Lead_num_date/Leads_20_06_2022.csv', sep=',')
-leads_df = pd.read_csv('C:/Users/nick-/Desktop/CI/4.Analytics section/for_Python/Lead_num_date/sales_with_amount_12_07_22.csv', sep=',')
-ledger = pd.read_excel('C:/Users/nick-/Desktop/CI/4.Analytics section/for_Python/Lead_num_date/Revenue_ledger_12_07_22.xlsx')
+leads_df = pd.read_csv('C:/Users/nick-/Desktop/CI/4.Analytics section/for_Python/Lead_num_date/sales_with_amount_20_07_22.csv', sep=',')
+ledger = pd.read_excel('C:/Users/nick-/Desktop/CI/4.Analytics section/for_Python/Lead_num_date/Revenue_ledger_20_07_22.xlsx')
 
 
 
@@ -27,4 +27,4 @@ ledger_leads['l.Id'] = ledger_leads['l.Id'].astype('object')
 # print(ledger_leads.head())
 
 # ledger_leads.to_csv('C:/Users/nick-/Desktop/CI/4.Analytics section/for_Python/Lead_num_date/ledger_leads_29_06_22.csv', sep=',')
-ledger_leads.to_excel('C:/Users/nick-/Desktop/CI/4.Analytics section/for_Python/Lead_num_date/ledger_leads_12_07_22.xlsx', index= False)
+ledger_leads.to_excel('C:/Users/nick-/Desktop/CI/4.Analytics section/for_Python/Lead_num_date/ledger_leads_20_07_22.xlsx', index= False)
