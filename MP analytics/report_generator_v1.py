@@ -2,25 +2,36 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
+import openpyxl
 import os
 
 pd.set_option('display.max_columns', None)
 
+# cwd = os.getcwd()
+# cur_dir = os.chdir("C:/Users/nick-/Desktop/TG_test/")
+# print(os.listdir('.'))
 
-'выбираем файл'
-# dirName = 'C:/Users/nick-/Desktop/TG_test'
-# listOfFiles = list()
-# for(dirpath, dirnames, filenames) in os.walk(dirName):
-#     listOfFiles += [os.path.join(dirpath, file) for file in filenames]
-# for elem in listOfFiles:
-#     print(elem)
+'''подгружаем excel, куда будем записывать данные'''
+wb = openpyxl.load_workbook('C:/Users/nick-/Desktop/TG_test/test_wb_aggregate.xlsx')
+sheet = wb.active
+print(sheet['A1'].value)
+print(sheet['A2'].value)
 
+min_row = sheet.min_row
+max_row = sheet.max_row
+min_col = sheet.min_column
+max_col = sheet.max_column
 
+print(min_row, min_col, max_row, max_col)
 
+'''работаем с репортом по товару'''
 df = pd.read_excel('C:/Users/nick-/Desktop/TG_test/2023-01-22—2023-02-20_Мебель_Мебель_для_прихожей_Вешалки_для_одежды_напольная.xlsx')
 
-# print(df.columns)
-# print(df.describe())
+niche_name = 'Мебель_для_прихожей_Вешалки_для_одежды_напольная'
+row = 1
+col = max_col + 1
+cell = sheet.cell(row = row, column = col)
+cell.value = niche_name
 
 df_sorted = df.sort_values(by='Выручка', ascending=False)
 
@@ -34,7 +45,19 @@ brands_df_sorted = df.pivot_table(index=['Бренд'],
 
 'считаем общую выручку'
 total_revenue = df_sorted['Выручка'].sum()
+row = row + 1
+cell = sheet.cell(row = row, column = col)
+cell.value = total_revenue
+
 total_missed_revenue = df_sorted['Упущенная выручка'].sum()
+row = row + 1
+cell = sheet.cell(row=row, column=col)
+cell.value = total_missed_revenue
+
+perc_missed_revenue = round(total_missed_revenue/total_revenue, 2)
+row = row + 1
+cell = sheet.cell(row=row, column=col)
+cell.value = perc_missed_revenue
 
 ''' ТОВАРЫ '''
 
@@ -118,4 +141,4 @@ seller_500k_rev = round(len(sellers_df_sorted[sellers_df_sorted['Выручка'
 
 'топ 15 самых дешевых товаров товаров и почему'
 
-# print(brands_df_sorted.head())
+wb.save('C:/Users/nick-/Desktop/TG_test/test_wb_aggregate.xlsx')
