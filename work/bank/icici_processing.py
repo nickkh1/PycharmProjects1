@@ -4,7 +4,7 @@ import pandas as pd
 
 pd.set_option('display.max_columns', None)
 
-bank_sheet = pd.read_excel('C:/Users/nick-/Desktop/CI/1.Payments/icic/arch/DetailedStatement_20_02_2023.xlsx',skiprows=16)
+bank_sheet = pd.read_excel('C:/Users/nick-/Desktop/CI/1.Payments/icic/arch/DetailedStatement_27_02_2023.xlsx',skiprows=16)
 
 #создаем словарь имя столбца: число(признак) на который надо заменить пропуски
 values = {
@@ -64,7 +64,7 @@ new_bank_sheet = bank_sheet.reindex(columns=['S.N.','Tran. Id','New date','Trans
 'Cheque. No./Ref. No.','Transaction Remarks','Cr/Dr','Transaction Amount(INR)','Balance (INR)']
 )
 
-new_bank_sheet.to_excel('C:/Users/nick-/Desktop/CI/1.Payments/icic/arch/from_py/DetailedStatement_2023_02_20.xlsx', index= False)
+new_bank_sheet.to_excel('C:/Users/nick-/Desktop/CI/1.Payments/icic/arch/from_py/DetailedStatement_2023_02_27.xlsx', index= False)
 # print(bank_sheet.head())
 # print(bank_sheet.info())
 # print(new_bank_sheet.head())

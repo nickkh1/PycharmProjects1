@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
 import openpyxl
+from openpyxl.styles.numbers import FORMAT_PERCENTAGE
 import os
 
 pd.set_option('display.max_columns', None)
@@ -11,27 +12,12 @@ pd.set_option('display.max_columns', None)
 # cur_dir = os.chdir("C:/Users/nick-/Desktop/TG_test/")
 # print(os.listdir('.'))
 
-'''подгружаем excel, куда будем записывать данные'''
-wb = openpyxl.load_workbook('C:/Users/nick-/Desktop/TG_test/test_wb_aggregate.xlsx')
-sheet = wb.active
-print(sheet['A1'].value)
-print(sheet['A2'].value)
-
-min_row = sheet.min_row
-max_row = sheet.max_row
-min_col = sheet.min_column
-max_col = sheet.max_column
-
-print(min_row, min_col, max_row, max_col)
 
 '''работаем с репортом по товару'''
-df = pd.read_excel('C:/Users/nick-/Desktop/TG_test/2023-01-22—2023-02-20_Мебель_Мебель_для_прихожей_Вешалки_для_одежды_напольная.xlsx')
-
-niche_name = 'Мебель_для_прихожей_Вешалки_для_одежды_напольная'
-row = 1
-col = max_col + 1
-cell = sheet.cell(row = row, column = col)
-cell.value = niche_name
+df = pd.read_excel('C:/Users/nick-/Desktop/TG_test/2023-01-22—2023-02-20_Зоотовары_Для_собак_Корм_и_лакомства_лакомства.xlsx')
+niche_name = 'Зоотовары_Для_собак_Корм_и_лакомства_лакомства'
+# print(df.head())
+# print(df.info())
 
 df_sorted = df.sort_values(by='Выручка', ascending=False)
 
@@ -45,19 +31,9 @@ brands_df_sorted = df.pivot_table(index=['Бренд'],
 
 'считаем общую выручку'
 total_revenue = df_sorted['Выручка'].sum()
-row = row + 1
-cell = sheet.cell(row = row, column = col)
-cell.value = total_revenue
-
 total_missed_revenue = df_sorted['Упущенная выручка'].sum()
-row = row + 1
-cell = sheet.cell(row=row, column=col)
-cell.value = total_missed_revenue
-
 perc_missed_revenue = round(total_missed_revenue/total_revenue, 2)
-row = row + 1
-cell = sheet.cell(row=row, column=col)
-cell.value = perc_missed_revenue
+
 
 ''' ТОВАРЫ '''
 
@@ -90,6 +66,7 @@ seller_perc_rev_top30 = round(sellers_df_sorted.loc[:29, 'Выручка'].sum()
 seller_perc_rev_10_percentile = round(sellers_df_sorted.loc[:seller_10_perc, 'Выручка'].sum() / total_revenue, 2)
 seller_perc_rev_50_percentile = round(sellers_df_sorted.loc[:seller_50_perc, 'Выручка'].sum() / total_revenue, 2)
 # print(seller_perc_rev_top10, seller_perc_rev_top30, seller_perc_rev_10_percentile, seller_perc_rev_50_percentile)
+
 
 'кол-во товаров на продавца'
 av_goods_per_seller_all = round(np.mean(sellers_df_sorted.loc[:, 'Товар']),1) # среднее кол-во товаров на продавца по всем продавцам
@@ -127,6 +104,7 @@ av_price_top100 = round(np.mean(df_sorted.loc[:99, 'Цена со скидкой
 price_perc_25 = round(np.percentile(df_sorted.loc[:, 'Цена со скидкой'], 25)) # 25 персентиль цены всех карточек
 price_median = round(np.percentile(df_sorted.loc[:, 'Цена со скидкой'], 50)) # 50 персентиль цены всех карточек
 price_perc_75 = round(np.percentile(df_sorted.loc[:, 'Цена со скидкой'], 75)) # 75 персентиль цены всех карточек
+
 # price_stdev = round(np.std(df_sorted.loc[:99, 'Цена со скидкой']))
 
 # print(av_price_top100, price_perc_25, price_median, price_perc_75)
@@ -140,5 +118,171 @@ seller_500k_rev = round(len(sellers_df_sorted[sellers_df_sorted['Выручка'
 'топ 15 самых дорогих товаров'
 
 'топ 15 самых дешевых товаров товаров и почему'
+
+
+
+'''подгружаем excel, куда будем записывать данные'''
+wb = openpyxl.load_workbook('C:/Users/nick-/Desktop/TG_test/test_wb_aggregate.xlsx')
+sheet = wb.active
+print(sheet['A1'].value)
+print(sheet['A2'].value)
+
+min_row = sheet.min_row
+max_row = sheet.max_row
+min_col = sheet.min_column
+max_col = sheet.max_column
+
+print(min_row, min_col, max_row, max_col)
+
+''' записываем значения'''
+row = 1
+col = max_col + 1
+cell = sheet.cell(row = row, column = col)
+cell.value = niche_name
+
+#общая выручка
+row = row + 1
+cell = sheet.cell(row = row, column = col)
+cell.value = total_revenue
+# упущенная выручка
+row = row + 1
+cell = sheet.cell(row=row, column=col)
+cell.value = total_missed_revenue
+# % упущенной выручки
+row = row + 1
+cell = sheet.cell(row=row, column=col)
+cell.value = perc_missed_revenue
+cell.number_format = FORMAT_PERCENTAGE
+# всего карточек в анализе
+row = row + 1
+cell = sheet.cell(row=row, column=col)
+cell.value = total_num_goods
+# % выручки топ100 товаров
+row = row + 1
+cell = sheet.cell(row=row, column=col)
+cell.value = perc_rev_top100
+cell.number_format = FORMAT_PERCENTAGE
+# % выручки топ 10% товаров
+row = row + 1
+cell = sheet.cell(row=row, column=col)
+cell.value = perc_rev_10_percentile
+cell.number_format = FORMAT_PERCENTAGE
+# % выручки топ 50% товаров
+row = row + 1
+cell = sheet.cell(row=row, column=col)
+cell.value = perc_rev_50_percentile
+cell.number_format = FORMAT_PERCENTAGE
+# % карточек с более чем 100т выручкой
+row = row + 1
+cell = sheet.cell(row=row, column=col)
+cell.value = goods_100k_rev
+cell.number_format = FORMAT_PERCENTAGE
+# Выручка на 1 карточку товара (все)
+row = row + 1
+cell = sheet.cell(row=row, column=col)
+cell.value = rev_per_good_all
+# Выручка на 1 карточку товара (топ100)
+row = row + 1
+cell = sheet.cell(row=row, column=col)
+cell.value = rev_per_good_top100
+# Выручка на 1 карточку товара (топ 10%)
+row = row + 1
+cell = sheet.cell(row=row, column=col)
+cell.value = rev_per_good_10percentile
+# Выручка на 1 карточку товара (топ 50%)
+row = row + 1
+cell = sheet.cell(row=row, column=col)
+cell.value = rev_per_good_50percentile
+# всего продавцов
+row = row + 1
+cell = sheet.cell(row=row, column=col)
+cell.value = total_num_seller
+# % продавцов с выручкой более 500к
+row = row + 1
+cell = sheet.cell(row=row, column=col)
+cell.value = seller_500k_rev
+cell.number_format = FORMAT_PERCENTAGE
+# % выручки топ10 продавцов
+row = row + 1
+cell = sheet.cell(row=row, column=col)
+cell.value = seller_perc_rev_top10
+cell.number_format = FORMAT_PERCENTAGE
+# % выручки топ30 продавцов
+row = row + 1
+cell = sheet.cell(row=row, column=col)
+cell.value = seller_perc_rev_top30
+cell.number_format = FORMAT_PERCENTAGE
+# % выручки топ 10% продавцов
+row = row + 1
+cell = sheet.cell(row=row, column=col)
+cell.value = seller_perc_rev_10_percentile
+cell.number_format = FORMAT_PERCENTAGE
+# % выручки топ 50% продавцов
+row = row + 1
+cell = sheet.cell(row=row, column=col)
+cell.value = seller_perc_rev_50_percentile
+cell.number_format = FORMAT_PERCENTAGE
+# Среднее кол-во товаров на продавца
+row = row + 1
+cell = sheet.cell(row=row, column=col)
+cell.value = av_goods_per_seller_all
+# Медианное кол-во товаров на продавца
+row = row + 1
+cell = sheet.cell(row=row, column=col)
+cell.value = median_goods_pre_seller_all
+# Среднее кол-во товаров у топ 10% продавцов
+row = row + 1
+cell = sheet.cell(row=row, column=col)
+cell.value = av_goods_per_seller_top10perc
+# Среднее кол-во отзывов
+row = row + 1
+cell = sheet.cell(row=row, column=col)
+cell.value = av_reviews_all
+# Кол-во отзывов у топ-10
+row = row + 1
+cell = sheet.cell(row=row, column=col)
+cell.value = av_review_top10
+# Кол-во отзывов у топ-30
+row = row + 1
+cell = sheet.cell(row=row, column=col)
+cell.value = av_review_top30
+# Кол-во отзывов у топ-100
+row = row + 1
+cell = sheet.cell(row=row, column=col)
+cell.value = av_review_top100
+# Кол-во отзывов у медианного товара
+row = row + 1
+cell = sheet.cell(row=row, column=col)
+cell.value = med_review_all
+# Средний рейтинг
+row = row + 1
+cell = sheet.cell(row=row, column=col)
+cell.value = av_rating_goods_all
+# Средний рейтинг у топ 30 товаров
+row = row + 1
+cell = sheet.cell(row=row, column=col)
+cell.value = av_rating_seller_top30
+# Средний рейтинг у топ 100 товаров
+row = row + 1
+cell = sheet.cell(row=row, column=col)
+cell.value = av_rating_goods_top100
+# Средняя цена (топ 100 карточек)
+row = row + 1
+cell = sheet.cell(row=row, column=col)
+cell.value = av_price_top100
+# 25 персентиль цены
+row = row + 1
+cell = sheet.cell(row=row, column=col)
+cell.value = price_perc_25
+# Медианная цена
+row = row + 1
+cell = sheet.cell(row=row, column=col)
+cell.value = price_median
+# 75 персентиль цены
+row = row + 1
+cell = sheet.cell(row=row, column=col)
+cell.value = price_perc_75
+
+
 
 wb.save('C:/Users/nick-/Desktop/TG_test/test_wb_aggregate.xlsx')
