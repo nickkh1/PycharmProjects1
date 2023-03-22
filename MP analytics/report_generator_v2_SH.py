@@ -13,7 +13,7 @@ pd.set_option('display.max_columns', None)
 # print(os.listdir('.'))
 
 '''работаем с дирикторией и файлами в ней'''
-os.chdir('C:/Users/nick-/Desktop/TG_test/SH')
+os.chdir('C:/Users/nick-/Desktop/TG_test/SH_21_03_2023')
 'создаем список файлов'
 listOfFiles = list()
 for(dirpath, dirnames, filenames) in os.walk(os.getcwd()):
@@ -28,7 +28,7 @@ for each in shortlist:
     '''получаем название ниши'''
     cur_file_name = each
     cur_file_name = cur_file_name.rstrip('.xlsx')
-    cur_file_name = cur_file_name.lstrip(r'C:\Users\nick-\Desktop\TG_test\SH\Отчет ')
+    cur_file_name = cur_file_name.lstrip(r'C:\Users\nick-\Desktop\TG_test\SH_21_03_2023\Отчет ')
     niche_name = cur_file_name
 
     '''работаем с репортом по товару'''
