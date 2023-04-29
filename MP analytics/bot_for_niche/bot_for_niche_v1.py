@@ -75,8 +75,76 @@
 # we are the owners of business that helps wildberries sellers in russia to find new niches to start selling on the marketplace.
 # please help me to create a bot in telegram via python where user can type a particular niche and then the info about this niche is provided to him from database in googlesheet
 
+
+# Новый, под который не установлена библиотека
+# import os
+# import telebot
+# from google.oauth2 import service_account
+# from googleapiclient.discovery import build
+#
+# # Telegram API token
+# TELEGRAM_API_TOKEN = "YOUR_TELEGRAM_API_TOKEN"
+#
+# # Google Sheets API settings
+# GOOGLE_SHEETS_API_SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
+# GOOGLE_SHEETS_API_CREDENTIALS_FILE = "path/to/your/credentials.json"
+# GOOGLE_SHEETS_SPREADSHEET_ID = "YOUR_SPREADSHEET_ID"
+#
+# # Create a Google Sheets API client
+# credentials = service_account.Credentials.from_service_account_file(GOOGLE_SHEETS_API_CREDENTIALS_FILE,
+#                                                                     scopes=GOOGLE_SHEETS_API_SCOPES)
+# sheets_api = build('sheets', 'v4', credentials=credentials)
+#
+# # Initialize the telebot
+# bot = telebot.TeleBot(TELEGRAM_API_TOKEN)
+#
+#
+# def get_niche_info(niche):
+#     sheet_name = "Sheet1"  # Replace with your sheet name
+#     range_name = f"{sheet_name}!A1:Z"  # Adjust the range according to your sheet
+#
+#     result = sheets_api.spreadsheets().values().get(spreadsheetId=GOOGLE_SHEETS_SPREADSHEET_ID,
+#                                                     range=range_name).execute()
+#     rows = result.get('values', [])
+#
+#     for row in rows:
+#         if row and row[0].lower() == niche.lower():
+#             return row[1:]
+#     return None
+#
+#
+# @bot.message_handler(commands=['start'])
+# def send_welcome(message):
+#     bot.reply_to(message,
+#                  "Welcome! Please type the niche you're interested in, and I'll provide you with information from our database.")
+#
+#
+# @bot.message_handler(func=lambda message: True)
+# def handle_message(message):
+#     niche = message.text
+#     info = get_niche_info(niche)
+#
+#     if info:
+#         bot.reply_to(message, f"Here's the information for the niche '{niche}':\n{', '.join(info)}")
+#     else:
+#         bot.reply_to(message, f"Sorry, we couldn't find any information for the niche '{niche}' in our database.")
+#
+#
+# if __name__ == "__main__":
+#     bot.polling()
+
+
+
+
+
+'''еще один'''
+
+import logging
 import os
-import telebot
+from aiogram import Bot, Dispatcher, types
+from aiogram.contrib.middlewares.logging import LoggingMiddleware
+from aiogram.types import ParseMode
+from aiogram.utils import executor
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 
@@ -93,8 +161,11 @@ credentials = service_account.Credentials.from_service_account_file(GOOGLE_SHEET
                                                                     scopes=GOOGLE_SHEETS_API_SCOPES)
 sheets_api = build('sheets', 'v4', credentials=credentials)
 
-# Initialize the telebot
-bot = telebot.TeleBot(TELEGRAM_API_TOKEN)
+# Initialize the aiogram
+logging.basicConfig(level=logging.INFO)
+bot = Bot(token=TELEGRAM_API_TOKEN)
+dp = Dispatcher(bot)
+dp.middleware.setup(LoggingMiddleware())
 
 
 def get_niche_info(niche):
@@ -111,22 +182,24 @@ def get_niche_info(niche):
     return None
 
 
-@bot.message_handler(commands=['start'])
-def send_welcome(message):
-    bot.reply_to(message,
-                 "Welcome! Please type the niche you're interested in, and I'll provide you with information from our database.")
+@dp.message_handler(commands=['start'])
+async def send_welcome(message: types.Message):
+    await message.reply(
+        "Welcome! Please type the niche you're interested in, and I'll provide you with information from our database.")
 
 
-@bot.message_handler(func=lambda message: True)
-def handle_message(message):
+@dp.message_handler()
+async def handle_message(message: types.Message):
     niche = message.text
     info = get_niche_info(niche)
 
     if info:
-        bot.reply_to(message, f"Here's the information for the niche '{niche}':\n{', '.join(info)}")
+        await message.reply(f"Here's the information for the niche '{niche}':\n{', '.join(info)}")
     else:
-        bot.reply_to(message, f"Sorry, we couldn't find any information for the niche '{niche}' in our database.")
+        await message.reply(f"Sorry, we couldn't find any information for the niche '{niche}' in our database.")
 
 
 if __name__ == "__main__":
-    bot.polling()
+    from aiogram import executor
+
+    executor.start_polling(dp, skip_updates=True)
