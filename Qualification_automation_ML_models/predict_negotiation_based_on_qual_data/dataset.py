@@ -6,15 +6,14 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import matplotlib.mlab as mlab
 import matplotlib
+
 plt.style.use('ggplot')
 from matplotlib.pyplot import figure
 
-
-matplotlib.rcParams['figure.figsize'] = (12,8)
+matplotlib.rcParams['figure.figsize'] = (12, 8)
 
 pd.options.mode.chained_assignment = None
 pd.set_option('display.max_columns', None)
-
 
 # чтение данных
 df = pd.read_csv('C:/Users/nick-/Desktop/CI/4.Analytics section/leads_1122_0423_DA.csv', sep=',')
@@ -62,28 +61,38 @@ df_less = df.drop(cols_to_drop, axis=1)
 # print(df_no_NA['Work experience'].value_counts())
 
 '''нужно сделать переход в Negotiation таргетным показателем'''
-print(df_less.info())
-print(df_less['Lead Stage'].value_counts())
+# print(df_less.info())
+# print(df_less['Lead Stage'].value_counts())
 
-def convert_to_qual(row):
-    if row['Lead Stage'] == 'Closed Lost':
-        val = 'Qualificated'
-    elif row['Lead Stage'] == 'ALPHA':
-        val = 'Qualificated'
-    return val
+df_less['result'] = np.where((df_less['Lead Stage'] == 'Closed Lost') | (df_less['Lead Stage'] == 'Down Payment Made') |
+            (df_less['Lead Stage'] == 'Internal EMI in Progress') |
+            (df_less['Lead Stage'] == 'Future Prospect')|
+            (df_less['Lead Stage'] == 'Closed Won')|
+            (df_less['Lead Stage'] == 'Refunded / Churned')|
+            (df_less['Lead Stage'] == 'Negotiation')|
+            (df_less['Lead Stage'] == 'Eligibility Checked')|
+            (df_less['Lead Stage'] == 'Internal EMI in Discussion'), 1, 0)
 
-df_less['result'] = df_less.apply(convert_to_qual, axis=1)
+# print(df_less.head(10))
+# print(df_less['result'].value_counts())
 
-print(df_less.head(5))
-
-
-
+# print(df_less.shape)
+# df_less = df_less.dropna(thresh=2)
+df_no_NA = df_less.dropna(subset=['Current salary'])
+df_no_NA = df_no_NA.dropna(subset=['Goal for Study'])
+df_no_NA['Work experience'] = df_no_NA['Work experience'].fillna('0-3') #заполнили средним значением
+df_final = df_no_NA.copy()
+# print(df_final.shape)
+for col in df_final.columns:
+    pct_missing = np.mean(df_final[col].isnull())
+    print('{} - {}%'.format(col, round(pct_missing*100)))
 
 
 
 
 
 '''
+
 # print(df_less['Lead Stage'].value_counts())
 
 df_less['Lead Stage'] = np.where((df_less['Lead Stage'] == 'Closed Won') | (df_less['Lead Stage'] == 'Down Payment Made') |
